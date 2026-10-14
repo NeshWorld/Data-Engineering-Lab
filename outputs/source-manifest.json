@@ -1,0 +1,23 @@
+{
+  "lab\\datasets.py": "fd246ca3e62a56c8ce635a11e0f670097bf4e9c631fd81406a3f428e4544eb34",
+  "lab\\engine.py": "7dde3e2f8955d38ece9bf31a752db8df4c501ba1400e1baa97d09f920065b2e8",
+  "lab\\server.py": "0fc2add20e198da6fa41cc9f1bd919cbc88ca154d2a5633cca6d42c54702b56a",
+  "lab\\sql_engine.py": "6a206515f9955510a387675c109db77992678fd0550c4ecffacd21872f288cfd",
+  "lab\\storage.py": "0dfabe4a2688b5a2180c752aa313dc56ace5dd52774e30ed5cfd763c459a06b1",
+  "lab\\__init__.py": "7bb1c2e325828047e4265e5d57f8a6dc05d7e2d0646f999640b0ce372f64b19b",
+  "web\\app.js": "21f4df19ef7da07fe188ee06076c811485bddeb12caf16f08dc1dcaeb37089cf",
+  "web\\index.html": "2d21e7fd571497dcfec81373c4b9dddc53292d12a8a7189d5774de1cffd9d9b1",
+  "web\\style.css": "4499a4f24d6e7b3bef3d4da5aaaaf28cb3d65e25e07707c16c641b0b965019b1",
+  "tests\\serve_ui_fixture.py": "e24bcbcdabd567c0e0dea0d2ac9b2907870861f13d89b0e66c23984bdf9850d0",
+  "tests\\test_datasets.py": "1c2180d154b39ee6335c2d226966e6e6d1c461af056df0959c1a5acfec4d9956",
+  "tests\\test_engine.py": "4e6bd7845a15ad449162520a1ba3fec6c7d91c6779e640be43bfea5a3b88e2e1",
+  "tests\\test_server.py": "74a883b0dbf834965d22ed12ae82c602e239474592403dd9a002453a1d3fa38c",
+  "docs\\ARCHITECTURE.md": "60781cdf95f93a4999fed7fbc2f832df249e594a87eb1b78100a53e8b3291226",
+  "docs\\CONTRACTS.md": "7f0273ca9f0378bc0d806d3957e0f79378f293700cfdf8b89f4f2ea5d5341186",
+  "docs\\SECURITY.md": "2afe3854feef8d06fc5eaa3f17bfcaa0e691464f6117693db640fc2a302720b5",
+  "run.py": "e7e5943e4e846f075b0dffc54038a19259f649901f12c34ef2482fb05bfaff8a",
+  "lab_cli.py": "370efced434cf48b3d72d685ac9652ace2ff9d7225b8ee772fc36c61a92840bf",
+  "README.md": "7b4734d09000de6f2604da1de6ea980e85f6eeb051264296bd6dcab44fe2542c",
+  "Start-Lab.cmd": "6087e7a503e4cfbf3932a9c8f57b61dc8d85ad216e78c07d7bf28d966dc2cb96",
+  "python-path.txt": "b8db3666d41eb3115284c2e5c1d341d8cb6e5a83dcb854ffb70e1bcb69111c22"
+}

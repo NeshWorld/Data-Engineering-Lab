@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "sql",
+    "exit_code": 0,
+    "row_count": 1,
+    "status": "success"
+  },
+  {
+    "kind": "python",
+    "exit_code": 0,
+    "row_count": 17,
+    "status": "success"
+  },
+  {
+    "kind": "pipeline",
+    "exit_code": 0,
+    "row_count": 1,
+    "status": "success"
+  }
+]
