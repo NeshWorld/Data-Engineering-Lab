@@ -4,3 +4,4 @@ data/
 work/
 experiments/
 outputs/*.png
+python-path.txt
