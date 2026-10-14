@@ -3,9 +3,27 @@ const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const quoteName = value => '"' + String(value).replace(/"/g, '""') + '"';
-const pages = {home:['Accueil','⌂'],sql:['Atelier SQL','⌘'],python:['Atelier Python','>_'],pipeline:['Pipelines','⇢'],explorer:['Explorateur','▦'],observability:['Observabilité','◷'],environments:['Environnements','◈']};
+const pages = {home:['Accueil','⌂'],sql:['Atelier SQL','⌘'],python:['Atelier Python','>_'],pipeline:['Pipelines','⇢'],explorer:['Explorateur','▦'],observability:['Observabilité','◷'],environments:['Environnements','◈'],diagram:['Diagramme ER','⌗'],settings:['Paramètres','⚙']};
 const kinds = {commerce:'E-commerce',logistics:'Logistique',events:'Événements',imperfect:'Données imparfaites'};
 const state = {environments:[],artifacts:[],runs:[],schema:[],env:'',page:'home',drafts:{sql:'',python:'',pipeline:'{\n  "name": "Mon pipeline",\n  "steps": []\n}'},artifact:{},names:{sql:'Ma requête',python:'Mon script',pipeline:'Mon pipeline'},results:{},activeRuns:{},explorerTable:'',selectedRun:'',python_ack:false};
+state.preferences={theme:'emerald',diagrams:{}};
+LabThemes.restoreCache();
+const pythonSessions=new Map();
+const documentRevision={sql:0,python:0,pipeline:0};
+let editorDispose=null;
+let themeDispose=null;
+let diagrams=[];
+let preferenceQueue=Promise.resolve();
+function savePreferences(patch) {
+  // Update the local model before any navigation can remount a diagram.
+  if(patch.theme)state.preferences.theme=patch.theme;
+  if(patch.diagram){const d=patch.diagram;const old=state.preferences.diagrams[d.env_id]||{positions:{}};state.preferences.diagrams[d.env_id]={positions:d.replace_positions?{...d.positions}:{...old.positions,...d.positions},...(d.viewport?{viewport:{...d.viewport}}:old.viewport?{viewport:old.viewport}:{})};}
+  const operation=preferenceQueue.then(()=>api('/api/preferences',patch));
+  preferenceQueue=operation.catch(error=>notify('Préférence non enregistrée : '+error.message,true));
+  return operation;
+}
+let initialized=false;
+let preferencesLoaded=false;
 let refreshSequence = 0;
 let toastTimer;
 let pipelineTimer;
@@ -31,6 +49,7 @@ function requireEnvironment() {if(!state.env) {notify('Créez et sélectionnez u
 function envNeeded() {return empty('Aucun environnement disponible. <a href="#environments">Créer un environnement</a> pour travailler sur vos données fictives.');}
 async function refreshState(renderAfter = true) {
   const token = ++refreshSequence;
+  if(!preferencesLoaded){const prefs=await api('/api/preferences');if(token!==refreshSequence)return;state.preferences=prefs;LabThemes.apply(prefs.theme);preferencesLoaded=true;}
   const fresh = await api('/api/state');
   if(token !== refreshSequence)return;
   Object.assign(state, {environments:fresh.environments || [],artifacts:fresh.artifacts || [],runs:fresh.runs || [],python_ack:fresh.python_ack,root:fresh.root,python:fresh.python,pandas:fresh.pandas});
@@ -43,19 +62,36 @@ async function refreshState(renderAfter = true) {
   if(renderAfter)render();
 }
 function render() {
+  if(!initialized)return;
+  editorDispose?.();editorDispose=null;
+  themeDispose?.();themeDispose=null;
+  diagrams.forEach(d=>d.destroy());diagrams=[];
   state.page=pages[location.hash.slice(1)]?location.hash.slice(1):'home';
   $('#current-page').textContent=pages[state.page][0];
   $('#navigation').innerHTML=Object.entries(pages).map(([id,[label,icon]])=>`<a href="#${id}" ${state.page===id?'class="active" aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${icon}</span>${label}${id==='sql'?'<span class="nav-badge">SQL</span>':''}</a>`).join('');
-  const builders={home:homeView,sql:sqlView,python:pythonView,pipeline:pipelineView,explorer:explorerView,observability:observabilityView,environments:environmentsView};
+  const builders={home:homeView,sql:sqlView,python:pythonView,pipeline:pipelineView,explorer:explorerView,observability:observabilityView,environments:environmentsView,diagram:diagramView,settings:settingsView};
   $('#main').innerHTML=builders[state.page]();
   bindPage();
   bindInspector();
+  $$('.er-container').forEach(container=>{
+    const fullView=state.page==='diagram',saved=state.preferences.diagrams[state.env]||{};
+    const layout=fullView?saved:{positions:saved.positions||{}};
+    diagrams.push(LabER.mount(container,{schema:state.schema,envId:state.env,layout,onSave:patch=>{
+      // Small embedded canvases share table positions, while keeping the full view's zoom.
+      if(!fullView)delete patch.viewport;
+      savePreferences({diagram:patch}).catch(()=>{});
+    }}));
+  });
+  if(state.page==='settings')themeDispose=LabThemes.bind($('#appearance'),{theme:state.preferences.theme,onSelect:id=>{LabThemes.apply(id);savePreferences({theme:id}).catch(()=>{});}});
 }
 function homeView() {return `<section class="hero"><div><div class="eyebrow">VOTRE LABORATOIRE DE DONNÉES</div><h1>Expérimentez.<br>Comprenez. Recommencez.</h1><p>Un espace local pour explorer des données fictives, écrire du SQL et du Python, puis construire vos propres pipelines.</p><div class="actions"><a class="button primary" href="#${state.env?'sql':'environments'}">${state.env?'Ouvrir l’atelier SQL':'Créer mon environnement'} <span aria-hidden="true">↗</span></a><a class="button ghost" href="#explorer">Explorer les données</a></div></div><div class="hero-art" aria-label="Exemple de parcours de données"><div class="flow-line"><span class="flow-node">source.csv</span><span class="flow-arrow">→</span><span class="flow-node">Python</span></div><div class="flow-line"><span class="flow-node">Validation</span><span class="flow-arrow">→</span><span class="flow-node">SQLite</span></div><div class="flow-note">01 / EXTRAIRE &nbsp; 02 / TRANSFORMER &nbsp; 03 / CHARGER</div></div></section><div class="section-label">CHOISISSEZ VOTRE ATELIER</div><div class="cards">${[['sql','⌘','Interroger en SQL','Explorez le schéma, écrivez une requête et inspectez son résultat.','Écrire une requête'],['python','>_','Transformer en Python','Travaillez avec des fichiers CSV, JSON et une copie de votre base.','Ouvrir un script'],['pipeline','⇢','Assembler un pipeline','Reliez vos étapes, exécutez-les et suivez les données à chaque passage.','Construire un pipeline']].map(([page,icon,title,text,link])=>`<a class="card" href="#${page}"><div class="card-icon" aria-hidden="true">${icon}</div><h2>${title}</h2><p>${text}</p><span class="card-link">${link} &nbsp; ↗</span></a>`).join('')}</div><div class="stat-row"><div class="stat"><span>Environnements disponibles</span><strong>${state.environments.length}</strong></div><div class="stat"><span>Expériences sauvegardées</span><strong>${state.artifacts.length}</strong></div><div class="stat"><span>Exécutions enregistrées</span><strong>${state.runs.length}</strong></div></div><div class="section-label">DERNIÈRES EXÉCUTIONS</div><div class="panel">${runTable(state.runs.slice(0,5))}</div>`;}
 function library(kind) {const options=state.artifacts.filter(a=>a.kind===kind);const selected=options.find(a=>a.id===state.artifact[kind]);return `<div class="library-bar"><label>Expérience sauvegardée<select id="artifact-select" aria-label="Expérience sauvegardée"><option value="">Nouvelle expérience</option>${options.map(a=>`<option value="${esc(a.id)}" ${state.artifact[kind]===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></label><label>Nom de l’expérience<input id="artifact-name" value="${esc(state.names[kind])}" maxlength="120"></label><button id="save-artifact" class="small">Sauvegarder</button></div>${selected?`<div class="artifact-path path">Fichier : ${esc(selected.path)}</div>`:""}`;}
 function editor(kind, label, actions) {return `<div class="panel editor-panel">${library(kind)}<div class="toolbar"><span class="toolbar-title"><span class="tag">${kind==='pipeline'?'JSON':kind.toUpperCase()}</span>${label}</span><div class="actions">${actions}</div></div><div class="editor-wrap ${kind==='sql'?'highlighted':''}">${kind==='sql'?'<pre class="syntax-layer" aria-hidden="true"></pre>':''}<textarea id="code-editor" class="code-editor" aria-label="${kind==='sql'?'Éditeur SQL':kind==='python'?'Éditeur Python':'Définition JSON du pipeline'}" aria-describedby="editor-help" spellcheck="false" wrap="off" placeholder="${kind==='sql'?'-- Écrivez votre requête SQL ici':kind==='python'?'# Écrivez votre script Python ici':''}">${esc(state.drafts[kind])}</textarea><span class="editor-gutter" aria-hidden="true">1</span></div><div class="editor-footer"><span id="editor-help">Ctrl + Entrée : exécuter · Ctrl + S : sauvegarder · Échap puis Tab : quitter l’éditeur</span><span id="editor-position">Ln 1, Col 1</span></div></div>`;}
 function schemaView() {if(!state.env)return envNeeded();return `<div class="panel"><div class="toolbar"><span class="toolbar-title">Schéma de la base</span><span class="tag">${state.schema.length} tables</span></div><div class="schema-list">${state.schema.length?state.schema.map(t=>`<details class="schema-table"><summary><span>${esc(t.name)}</span><span>${t.count??'—'} lignes</span></summary><div class="schema-columns">${(t.columns||[]).map(c=>`<div class="column-row"><span>${c.pk?'<span class="key">PK</span> ':''}${esc(c.name)}</span><span class="type">${esc(c.type || 'ANY')}${c.notnull?' · NN':''}</span></div>`).join('')}${(t.foreign_keys||[]).map(f=>`<div class="meta-line">↗ ${esc(f.from)} → ${esc(f.table)}.${esc(f.to)}</div>`).join('')}${(t.indexes||[]).map(i=>`<div class="meta-line">Index ${esc(i.name)}${i.unique?' · unique':''}</div>`).join('')}<button class="small ghost insert-table" data-table="${esc(t.name)}">Insérer un SELECT</button></div></details>`).join(''):empty('Aucune table dans cette base.')}</div></div><div class="notice">${esc(environment()?.name || '')}<br><span class="subtle">Les requêtes SQL modifient la base active. Python et les pipelines travaillent sur une copie.</span></div>`;}
-function relationships() {const relationships=state.schema.flatMap(t=>(t.foreign_keys||[]).map(f=>({source:t.name,...f})));return `<div class="panel"><div class="toolbar"><span>Relations entre tables</span><span class="tag">Clés étrangères</span></div><div class="relationship-map">${relationships.length?relationships.map(f=>`<div class="relation-row"><span class="relation-node">${esc(f.source)}<br><span class="muted">${esc(f.from)}</span></span><span class="relation-arrow" aria-label="référence">──→</span><span class="relation-node">${esc(f.table)}<br><span class="muted">${esc(f.to)}</span></span></div>`).join(''):'<div class="empty-inline">Aucune clé étrangère déclarée dans ce schéma.</div>'}</div></div>`;}
+function relationships() {return `<div class="panel"><div class="toolbar"><span>Relations entre tables</span><a class="small button ghost" href="#diagram">Agrandir</a></div><div class="er-container"></div></div>`;}
+function diagramView(){return heading('Diagramme entité-relation','Explorez les tables et les contraintes déclarées dans la base active.')+(state.env?'<section class="panel"><div class="er-container er-full"></div></section>':envNeeded());}
+function settingsView(){return heading('Paramètres','Personnalisez votre espace de travail.')+`<div id="appearance">${LabThemes.render(state.preferences.theme)}</div>`;}
+
 function isTabularResult(result) {return result&&Array.isArray(result.columns)&&Array.isArray(result.rows);}
 function resultTable(result) {if(!result)return empty('Votre résultat s’affichera ici après une exécution.','▦');if(result.error)return `<div class="panel-body"><div class="error-box" role="alert">${esc(result.error)}</div></div>`;const cols=result.columns||[];let rows=result.rows||[];return `${cols.length?`<div class="table-scroll"><table class="data-table"><thead><tr>${cols.map(c=>`<th scope="col">${esc(typeof c==='object'?c.name:c)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${cols.map((col,i)=>{const value=Array.isArray(row)?row[i]:row[typeof col==='object'?col.name:col];const text=value==null?'NULL':typeof value==='object'?JSON.stringify(value):String(value);return `<td${value==null?' class="cell-null"':''}><span class="cell-value" title="${esc(text)}">${esc(text)}</span></td>`;}).join('')}</tr>`).join('')}</tbody></table>${!rows.length?'<div class="empty-inline">La requête ne retourne aucune ligne.</div>':''}</div>`:empty('Instructions exécutées. Aucun résultat tabulaire.','✓')}<div class="result-meta">${result.row_count??rows.length} lignes · ${duration(result.duration_ms)}${result.changes!=null?` · ${result.changes} modifications`:''}${result.truncated?' · Affichage tronqué : '+rows.length+' lignes affichées':''}</div>`;}
 function sqlView() {return heading('Atelier SQL','Écrivez, exécutez et inspectez vos requêtes sur la base active.')+(!state.env?envNeeded():`<div class="panel-grid"><div class="stack">${editor('sql','Éditeur de requêtes','<button class="primary small" id="run-sql">Exécuter ↗</button>')}<div class="panel"><div class="toolbar"><span>Résultat de la requête</span><span class="tag">SQLite</span></div><div id="sql-result">${resultTable(state.results.sql)}</div></div>${relationships()}<div class="panel"><div class="toolbar">Historique SQL</div>${runTable(state.runs.filter(r=>r.kind==='sql'&&r.env_id===state.env).slice(0,8))}</div></div><aside class="stack" aria-label="Schéma SQL">${schemaView()}</aside></div>`);}
@@ -134,7 +170,7 @@ function bindEditor(kind) {
   editor.addEventListener('click',update);
   editor.addEventListener('keyup',update);
   editor.addEventListener('scroll',()=>{const gutter=$('.editor-gutter');if(gutter)gutter.style.transform='translateY(-'+editor.scrollTop+'px)';const layer=$('.syntax-layer');if(layer){layer.scrollTop=editor.scrollTop;layer.scrollLeft=editor.scrollLeft;}});
-  editor.addEventListener('keydown',event=>{
+  if(kind!=='python')editor.addEventListener('keydown',event=>{
     if(event.key==='Escape'){editor.dataset.tabEscape='true';return;}
     if(event.key==='Tab'&&(event.shiftKey||editor.dataset.tabEscape)){delete editor.dataset.tabEscape;return;}
     if(event.key==='Tab'){event.preventDefault();editor.setRangeText('    ',editor.selectionStart,editor.selectionEnd,'end');update();}
@@ -149,21 +185,36 @@ function bindEditor(kind) {
     let isDirty=baseline?baseline.code!==state.drafts[kind]||baseline.name!==state.names[kind]:Boolean(state.drafts[kind].trim());
     if(!baseline&&kind==='pipeline'){try{isDirty=pipelineDefinition().steps.length>0;}catch{isDirty=true;}}
     if(isDirty && state.drafts[kind]!==nextCode && !await confirmAction('Ouvrir une autre expérience ?','Le contenu actuel de l’éditeur sera remplacé. Sauvegardez-le avant de poursuivre si vous souhaitez le conserver.','Ouvrir')) {$('#artifact-select').value=state.artifact[kind] || '';return;}
+    documentRevision[kind]++;
     state.artifact[kind]=id;state.drafts[kind]=nextCode;state.names[kind]=artifact?.name || ({sql:'Ma requête',python:'Mon script',pipeline:'Mon pipeline'}[kind]);
     render();
     if(artifact && artifact.env_id!==state.env)notify('Expérience ouverte. Elle sera exécutée sur l’environnement actuellement sélectionné.');
   });
   update();
+  if(kind==='python'){
+    const key=state.artifact.python||'draft';
+    if(!pythonSessions.has(key))pythonSessions.set(key,LabPythonEditor.createSession(editor.value));
+    editorDispose=pythonSessions.get(key).attach(editor);
+  }
   if(state.activeRuns[kind]?.status==='running')setRunControls(kind,true);
 }
 async function saveArtifact(kind) {
   if(!requireEnvironment())return;
   const name=state.names[kind].trim();if(!name)throw new Error('Donnez un nom à votre expérience.');
   if(kind==='pipeline')pipelineDefinition();
-  const saved=await api('/api/artifact',{id:state.artifact[kind] || undefined,name,kind,code:state.drafts[kind],env_id:state.env});
-  state.artifact[kind]=saved.id;
-  await refreshState(false);render();notify('Expérience sauvegardée dans le projet.');
+  const revision=documentRevision[kind],originalId=state.artifact[kind];
+  const payload={id:originalId||undefined,name,kind,code:state.drafts[kind],env_id:state.env};
+  const saved=await api('/api/artifact',payload);
+  const sameDocument=documentRevision[kind]===revision&&state.artifact[kind]===originalId;
+  if(sameDocument){
+    if(kind==='python'&&!originalId&&pythonSessions.has('draft')){pythonSessions.set(saved.id,pythonSessions.get('draft'));pythonSessions.delete('draft');}
+    state.artifact[kind]=saved.id;
+  }
+  await refreshState(false);
+  if(sameDocument&&state.page===kind)render();
+  notify('Expérience « '+saved.name+' » sauvegardée dans le projet.');
 }
+
 async function executeSQL() {
   if(!requireEnvironment())return;
   if(!state.drafts.sql.trim())throw new Error('Écrivez une requête avant de l’exécuter.');
@@ -302,7 +353,7 @@ document.addEventListener('keydown',event=>{
   if(event.key==='Enter'){const action=$('#run-'+state.page);if(action){event.preventDefault();action.click();}}
 });
 render();
-refreshState().catch(error=>{$('#connection-status').textContent='Serveur local inaccessible';notify(error.message,true);$('#main').innerHTML=heading('Connexion au laboratoire','Le serveur local doit être démarré pour accéder à vos expériences.')+`<div class="error-box">${esc(error.message)}</div><p>Utilisez le bouton Actualiser en haut à droite après avoir démarré le laboratoire.</p>`;});
+(async()=>{await refreshState(false);initialized=true;render();})().catch(error=>{initialized=true;$('#connection-status').textContent='Serveur local inaccessible';notify(error.message,true);$('#main').innerHTML=heading('Connexion au laboratoire','Le serveur local doit être démarré pour accéder à vos expériences.')+`<div class="error-box">${esc(error.message)}</div><p>Utilisez le bouton Actualiser en haut à droite après avoir démarré le laboratoire.</p>`;});
 
 
 

@@ -1,0 +1,73 @@
+{
+  "version": "1.1",
+  "baseline_python_tests": 52,
+  "final_python_tests": 59,
+  "final_node_tests": 77,
+  "total_final_automated": 136,
+  "node_suites": {
+    "themes": 14,
+    "python_editor": 30,
+    "er_diagram": 27,
+    "integration": 6
+  },
+  "personal_file_count": 12,
+  "personal_files_unchanged": true,
+  "catalogue_rows_unchanged": {
+    "environments": true,
+    "artifacts": true,
+    "runs": true,
+    "snapshots": true
+  },
+  "browser": "Codex in-app browser",
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "browser_checks": [
+    "4 thèmes, aperçu et sélection",
+    "Cuivre conservé après rechargement et redémarrage serveur fixture",
+    "reprise après GET préférences 503 simulé et Actualiser",
+    "paires imbriquées et guillemets, curseur, suppression et saut",
+    "Enter entre paires sur 3 lignes",
+    "indentation après deux-points et maintien",
+    "sélection entourée, annulation et rétablissement texte/sélection",
+    "historique conservé après sauvegarde et navigation",
+    "Ctrl+S et Ctrl+Entrée",
+    "Python réel stdout v1.1",
+    "SQL réel SELECT 42 et DDL qa_added",
+    "mise à jour ER après DDL",
+    "drag souris produit et pan fond, zoom, Tout voir",
+    "positions conservées après navigation et reload",
+    "FK composites explicites et implicites, actions CASCADE",
+    "référence absente sans table fantôme",
+    "colonne générée et __proto__",
+    "recherche dans 53 tables et 51 FK",
+    "pipeline 5 étapes, 300 lignes source, 100 lignes résultat"
+  ],
+  "independent_agents": [
+    "architecture_research (audit et QA indépendante)",
+    "themes",
+    "python_editor",
+    "er_diagram"
+  ],
+  "limitations": [
+    "éditeur lexical léger : expressions internes f-string traitées comme texte",
+    "IME testé par événements simulés, pas de méthode de saisie matérielle",
+    "schémas de plus de 53 objets non mesurés en navigateur",
+    "tests visuels sur navigateur intégré de ce poste uniquement"
+  ]
+}

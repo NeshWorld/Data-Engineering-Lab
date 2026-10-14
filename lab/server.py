@@ -14,7 +14,7 @@ class Server(ThreadingHTTPServer):
         self.lab=lab
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='DataEngineeringLab/1.0'
+    server_version='DataEngineeringLab/1.1'
     def setup(self):
         super().setup()
         self.connection.settimeout(15)
@@ -64,13 +64,15 @@ class Handler(BaseHTTPRequestHandler):
             path=parsed.path
             query={k:v[0] for k,v in parse_qs(parsed.query).items()}
             lab=self.server.lab
-            if method=='GET' and path in ('/','/index.html','/style.css','/app.js'):
+            if method=='GET' and path in ('/','/index.html','/style.css','/app.js','/themes.js','/themes.css','/python-editor.js','/er-diagram.js','/er-diagram.css'):
                 filename='index.html' if path in ('/','/index.html') else path[1:]
                 content=(lab.root/'web'/filename).read_bytes()
-                self.respond(200,content,{'index.html':'text/html; charset=utf-8','style.css':'text/css; charset=utf-8','app.js':'text/javascript; charset=utf-8'}[filename])
+                self.respond(200,content,('text/html' if filename.endswith('.html') else 'text/css' if filename.endswith('.css') else 'text/javascript')+'; charset=utf-8')
                 return
             if method=='GET':
-                if path=='/api/state':
+                if path=='/api/preferences':
+                    data=lab.preferences()
+                elif path=='/api/state':
                     data=lab.state()
                 elif path=='/api/schema':
                     data=lab.schema(query.get('env_id'))
@@ -98,7 +100,9 @@ class Handler(BaseHTTPRequestHandler):
                 if not isinstance(args,dict):
                     raise ValueError('Objet JSON attendu.')
                 eid=args.get('env_id')
-                if path=='/api/environment':
+                if path=='/api/preferences':
+                    data=lab.preferences(args)
+                elif path=='/api/environment':
                     data=lab.create_environment(args)
                 elif path=='/api/reset':
                     data=lab.regenerate(eid,False)

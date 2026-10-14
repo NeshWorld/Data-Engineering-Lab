@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import importlib.util
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -80,6 +81,52 @@ class Lab:
             c.execute("INSERT OR REPLACE INTO settings VALUES ('python_ack','true')")
         return dict(accepted=True)
 
+    def preferences(self, patch=None):
+        """Atomically merge only UI settings; execution consent is independent."""
+        with self.lock, self.connect() as c:
+            row = c.execute("SELECT value FROM settings WHERE key='ui_preferences'").fetchone()
+            prefs = json.loads(row[0]) if row else dict(theme='emerald', diagrams={})
+            if patch is None:
+                return prefs
+            if not isinstance(patch, dict) or not patch or set(patch)-{'theme','diagram'}:
+                raise ValueError('Préférences invalides.')
+            if 'theme' in patch:
+                if patch['theme'] not in ('emerald','arctic','amethyst','copper'):
+                    raise ValueError('Thème inconnu.')
+                prefs['theme'] = patch['theme']
+            if 'diagram' in patch:
+                d = patch['diagram']
+                if not isinstance(d,dict) or set(d)-{'env_id','positions','viewport','replace_positions'}:
+                    raise ValueError('Disposition du diagramme invalide.')
+                eid = d.get('env_id')
+                self.get('environments', eid)
+                def finite(value, low, high):
+                    return type(value) in (int,float) and low <= value <= high and math.isfinite(value)
+                if 'replace_positions' in d and type(d['replace_positions']) is not bool:
+                    raise ValueError('replace_positions doit être booléen.')
+                layout = prefs['diagrams'].setdefault(eid,dict(positions={}))
+                if 'positions' in d:
+                    positions = d['positions']
+                    if not isinstance(positions,dict) or len(positions)>1000:
+                        raise ValueError('Nombre de positions invalide.')
+                    for name, xy in positions.items():
+                        if not isinstance(name,str) or not 1 <= len(name) <= 512 or not isinstance(xy,dict) or set(xy)!={'x','y'} or not all(finite(xy[a],-10_000_000,10_000_000) for a in ('x','y')):
+                            raise ValueError('Coordonnées du diagramme invalides.')
+                    merged = {} if d.get('replace_positions') else layout.get('positions',{}).copy()
+                    merged.update(positions)
+                    if len(merged)>1000:
+                        raise ValueError('Nombre de positions invalide.')
+                    layout['positions'] = merged
+                elif d.get('replace_positions'):
+                    raise ValueError('Positions requises pour réorganiser.')
+                if 'viewport' in d:
+                    v = d['viewport']
+                    if not isinstance(v,dict) or set(v)!={'x','y','scale'} or not all(finite(v[a],-10_000_000,10_000_000) for a in ('x','y')) or not finite(v['scale'],.1,3):
+                        raise ValueError('Vue du diagramme invalide.')
+                    layout['viewport'] = v.copy()
+            c.execute("INSERT OR REPLACE INTO settings VALUES ('ui_preferences',?)",(json.dumps(prefs,ensure_ascii=False,allow_nan=False),))
+            return prefs
+
     def create_environment(self, args):
         kind = args.get('kind','commerce')
         name = str(args.get('name',kind)).strip()[:120]
@@ -149,11 +196,11 @@ class Lab:
                 c.execute('PRAGMA trusted_schema=OFF')
                 c.set_progress_handler(lambda: int(time.monotonic()-started > 5), 1000)
                 result = []
-                for name, kind in c.execute("SELECT name,type FROM sqlite_master WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY name").fetchall():
-                    columns = [dict(name=x[1],type=x[2],notnull=bool(x[3]),pk=bool(x[5])) for x in c.execute('PRAGMA table_info('+identifier(name)+')')]
-                    fks = [dict(table=x[2],**{'from':x[3],'to':x[4]}) for x in c.execute('PRAGMA foreign_key_list('+identifier(name)+')')]
+                for name, kind, ddl in c.execute("SELECT name,type,sql FROM sqlite_master WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY name").fetchall():
+                    columns = [dict(name=x[1],type=x[2],notnull=bool(x[3]),pk=bool(x[5]),pk_ordinal=x[5],hidden=x[6],default=x[4]) for x in c.execute('PRAGMA table_xinfo('+identifier(name)+')')]
+                    fks = [dict(id=x[0],seq=x[1],table=x[2],on_update=x[5],on_delete=x[6],match=x[7],**{'from':x[3],'to':x[4]}) for x in c.execute('PRAGMA foreign_key_list('+identifier(name)+')')]
                     indexes = [dict(name=x[1],unique=bool(x[2])) for x in c.execute('PRAGMA index_list('+identifier(name)+')')]
-                    result.append(dict(name=name,type=kind,count=c.execute('SELECT COUNT(*) FROM '+identifier(name)).fetchone()[0],columns=columns,foreign_keys=fks,indexes=indexes))
+                    result.append(dict(name=name,type=kind,sql=ddl,count=c.execute('SELECT COUNT(*) FROM '+identifier(name)).fetchone()[0],columns=columns,foreign_keys=fks,indexes=indexes))
                 return dict(tables=result)
 
     def profile(self,eid,table):

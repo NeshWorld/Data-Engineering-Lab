@@ -37,6 +37,17 @@ class ServerCase(unittest.TestCase):
         self.assertEqual(self.post('/api/reset',dict(env_id=eid))[0],200)
         status,_,state=self.request('GET','/api/state'); self.assertEqual(status,200); self.assertEqual(state['data']['artifacts'][0]['id'],saved['data']['id'])
         self.assertEqual(self.request('GET','/api/schema?env_id='+eid)[0],200)
+    def test_preferences_http_and_new_static_modules(self):
+        self.assertEqual(self.request('GET','/api/preferences')[2]['data']['theme'],'emerald')
+        self.assertEqual(self.post('/api/preferences',{'theme':'amethyst'})[0],200)
+        self.assertEqual(self.request('GET','/api/preferences')[2]['data']['theme'],'amethyst')
+        self.assertEqual(self.post('/api/preferences',{'theme':'invalid'})[0],400)
+        for filename in ['themes.js','themes.css','python-editor.js','er-diagram.js','er-diagram.css']:
+            (self.root/'web'/filename).write_text('/* fixture */',encoding='utf-8')
+            status,headers,_=self.request('GET','/'+filename)
+            self.assertEqual(status,200)
+            self.assertIn('text/css' if filename.endswith('.css') else 'text/javascript',headers['Content-Type'])
+
     def test_host_origin_fetch_site_controls(self):
         for headers in [{'Host':'attacker.example'},{'Host':'127.0.0.1:1'},{'Origin':'https://attacker.example'},{'Origin':'null'},{'Sec-Fetch-Site':'cross-site'}]:
             with self.subTest(headers=headers):self.assertEqual(self.request('GET','/api/state',headers=headers)[0],403)

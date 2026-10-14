@@ -2,7 +2,7 @@
 
 ## Choix validé
 
-Application personnelle locale, monoprocessus serveur avec threads pour les requêtes et les expériences. Python **3.12.14**, SQLite **3.53.1**, HTML/CSS/JavaScript natifs. Interface en français, ressources et polices système uniquement. Aucun paquet à télécharger pour les fonctions essentielles. pandas disponible sur ce poste et testé, mais facultatif. Node **24.15.0** uniquement pour vérifier la syntaxe JavaScript pendant le développement.
+Application personnelle locale, monoprocessus serveur avec threads pour les requêtes et les expériences. Python **3.12.14**, SQLite **3.53.1**, HTML/CSS/JavaScript natifs. Interface en français, ressources et polices système uniquement. Aucun paquet à télécharger pour les fonctions essentielles. pandas disponible sur ce poste et testé, mais facultatif. Node **24.15.0** pour les tests JavaScript des modules et la vérification de syntaxe pendant le développement.
 
 Rust reste une préférence pour une future distribution compilée ; aucune chaîne cargo n'était disponible dans le PATH inspecté. Ajouter Tauri aurait imposé une chaîne Rust/C++ et une étape de distribution supplémentaire sans améliorer immédiatement le moteur SQLite/Python déjà disponible. Une interface navigateur locale permet ici un socle fiable, hors ligne et directement testable. Ce choix a été examiné par un sous-agent indépendant avant les développements parallèles.
 
@@ -40,3 +40,11 @@ La base des expériences est dans data/catalog.sqlite. Les fichiers sauvegardés
 - [Limites de http.server](https://docs.python.org/3/library/http.server.html)
 
 Ces références ont servi au développement ; l'application n'effectue aucune requête vers ces sites.
+
+## Ergonomie 1.1
+
+L’interface existante est étendue par trois modules JavaScript classiques, chargés avant app.js. `themes.js` et `themes.css` centralisent les palettes et les états sémantiques. `python-editor.js` étend le textarea existant avec des transactions texte/sélection et un historique limité, sans installer d’IDE. `er-diagram.js` rend un SVG et un inspecteur à partir du schéma SQLite. Les helpers purs sont aussi exportés pour les tests Node.
+
+Le choix SVG local est proportionné au laboratoire et évite une dépendance de moteur physique ou une migration de framework. Le placement initial est déterministe ; les positions personnalisées et la vue sont conservées par environnement. Une recherche permet de retrouver une table dans un schéma volumineux. Les contraintes sont regroupées par table source et identifiant de FK, puis ordonnées par seq. Une cible implicite est résolue uniquement à partir de l’ordre déclaré de la PK du parent. Un parent absent reste non résolu. Aucune relation n’est déduite d’un nom ressemblant.
+
+`PRAGMA table_xinfo` inclut les colonnes générées ; les champs existants de l’API restent présents. `GET/POST /api/preferences` lit et fusionne un document UI sous la clé settings/ui_preferences, sous le verrou du laboratoire. Le consentement Python reste indépendant. Le navigateur sérialise les sauvegardes de thème et de disposition pour éviter les réponses anciennes et met à jour son modèle avant le démontage d’une vue.
