@@ -1,0 +1,434 @@
+{
+  "version": "1.0.0",
+  "exercises": [
+    {
+      "id": "py-normaliser-evenements",
+      "version": "1.0.0",
+      "title": "Le quai des événements désordonnés",
+      "domain": "python",
+      "skill_ids": [
+        "py-strings",
+        "py-collections",
+        "py-loops"
+      ],
+      "prerequisite_skill_ids": [
+        "py-basics",
+        "py-functions"
+      ],
+      "level": "beginner",
+      "kind": "targeted",
+      "engine": "python",
+      "objective": "Normaliser une liste d’événements en conservant la première occurrence de chaque identifiant.",
+      "statement": "Le terminal du port reçoit plusieurs copies d’un même événement. Écrivez normaliser_evenements(lignes) pour obtenir une liste exploitable. Chaque résultat contient uniquement id et ville. Un identifiant absent, None ou composé d’espaces rend la ligne inutilisable. Pour un identifiant non vide, gardez sa première occurrence après nettoyage, dans l’ordre d’arrivée.",
+      "input_contract": "Entrée : liste de dictionnaires avec id et ville facultatifs. id : None/absent devient une chaîne vide ; sinon str(valeur).strip(). ville : None/absente devient une chaîne vide ; sinon str(valeur).strip().title(). Sortie : liste de dictionnaires exactement {\"id\": chaîne, \"ville\": chaîne}. Les identifiants restent sensibles à la casse.",
+      "starter": "def normaliser_evenements(lignes):\n    # TODO : normaliser les lignes et conserver chaque premier identifiant.\n    raise NotImplementedError(\"À vous de construire le traitement\")\n",
+      "sample": {
+        "filename": "evenements.json",
+        "content": "[\n  {\"id\": \" A-7 \", \"ville\": \" lille \"},\n  {\"id\": \"A-7\", \"ville\": \"LYON\"},\n  {\"id\": \"  \", \"ville\": \"Paris\"},\n  {\"id\": 0, \"ville\": null}\n]\n"
+      },
+      "constraints": [
+        "Ne modifiez pas la liste ni ses dictionnaires d’entrée.",
+        "N’utilisez aucun fichier, réseau ou package externe.",
+        "La fonction doit aussi fonctionner avec une liste vide.",
+        "Ces règles sont pédagogiques : Python conserve les droits du compte et ne fournit pas de confinement de sécurité."
+      ],
+      "success_criteria": [
+        "L’ordre initial des identifiants retenus est respecté.",
+        "Le premier A-7 est conservé, la copie suivante est ignorée.",
+        "L’identifiant numérique 0 devient \"0\" ; la ville absente devient \"\"."
+      ],
+      "hints": [
+        "Séparez les étapes : nettoyer un identifiant, décider de garder la ligne, construire la sortie.",
+        "Une collection d’identifiants déjà rencontrés permet de décider si une ligne est une copie.",
+        "Testez le caractère vide après strip(), puis ajoutez l’identifiant retenu à un ensemble avant de passer à la ligne suivante."
+      ],
+      "validator_id": "py-normaliser-evenements",
+      "estimated_minutes": 10
+    },
+    {
+      "id": "py-total-categories",
+      "version": "1.0.0",
+      "title": "La caisse du marché lunaire",
+      "domain": "python",
+      "skill_ids": [
+        "py-functions",
+        "py-collections",
+        "py-strings"
+      ],
+      "prerequisite_skill_ids": [
+        "py-basics",
+        "py-loops"
+      ],
+      "level": "beginner",
+      "kind": "challenge",
+      "engine": "python",
+      "objective": "Calculer un total fiable par catégorie malgré des entrées hétérogènes.",
+      "statement": "Le marché lunaire encaisse des ventes et des retours. Écrivez total_par_categorie(ventes). Une catégorie doit être nettoyée avec strip().lower(). Ignorez une catégorie absente, None ou vide. Acceptez un montant numérique ou une chaîne numérique, ignorez un montant invalide, absent ou non fini. Les retours négatifs comptent dans le total.",
+      "input_contract": "Entrée : liste de dictionnaires {categorie, montant}. Pour une catégorie non None : str(categorie).strip().lower(). Pour le montant : entier, réel ou chaîne convertible par float après nettoyage ; None, chaîne vide, texte non numérique, NaN et infinis sont ignorés. Sortie : dictionnaire {categorie_normalisee: total}, chaque somme arrondie avec round(somme, 2) après accumulation. Les booléens True et False ne sont pas des montants numériques valides et sont ignorés (ou comptés comme manquants pour le bilan).",
+      "starter": "def total_par_categorie(ventes):\n    # TODO : filtrer les entrées et additionner les montants par catégorie.\n    raise NotImplementedError(\"À vous de calculer les totaux\")\n",
+      "sample": {
+        "filename": "ventes.json",
+        "content": "[\n  {\"categorie\": \" Outils \", \"montant\": \"12.50\"},\n  {\"categorie\": \"outils\", \"montant\": -2.5},\n  {\"categorie\": \"Livres\", \"montant\": \"erreur\"},\n  {\"categorie\": \" \", \"montant\": 90},\n  {\"categorie\": \"Épices\", \"montant\": 4}\n]\n"
+      },
+      "constraints": [
+        "Arrondissez une seule fois, à la fin pour chaque catégorie.",
+        "Une catégorie sans aucun montant valide n’apparaît pas dans le résultat.",
+        "Ne modifiez pas l’entrée ; n’utilisez aucun accès externe.",
+        "Ces règles sont pédagogiques : Python conserve les droits du compte et ne fournit pas de confinement de sécurité."
+      ],
+      "success_criteria": [
+        "Les catégories qui ne diffèrent que par la casse ou les espaces sont regroupées.",
+        "Les montants négatifs sont conservés.",
+        "Une liste sans entrée valide donne {}."
+      ],
+      "hints": [
+        "Commencez par séparer les règles de validité de la catégorie et du montant.",
+        "Une conversion numérique peut échouer ; une conversion réussie peut encore donner une valeur non finie.",
+        "Accumulez les valeurs finies dans un dictionnaire, puis construisez le résultat final avec des totaux arrondis."
+      ],
+      "validator_id": "py-total-categories",
+      "estimated_minutes": 15
+    },
+    {
+      "id": "py-bilan-qualite",
+      "version": "1.0.0",
+      "title": "Le rapport qualité du capteur",
+      "domain": "data",
+      "skill_ids": [
+        "data-cleaning",
+        "py-collections",
+        "py-functions"
+      ],
+      "prerequisite_skill_ids": [
+        "py-loops",
+        "py-errors"
+      ],
+      "level": "intermediate",
+      "kind": "professional",
+      "engine": "python",
+      "objective": "Produire des indicateurs de qualité définis précisément sans corriger les données à la place de l’utilisateur.",
+      "statement": "Avant un chargement, l’équipe veut savoir ce qui doit être vérifié. Écrivez bilan_qualite(lignes), qui compte toutes les lignes, les valeurs manquantes ou inutilisables, les occurrences supplémentaires d’identifiants et les valeurs numériques négatives. Une ligne peut contribuer à plusieurs indicateurs. Ne supprimez et ne réparez rien.",
+      "input_contract": "Entrée : liste de dictionnaires avec id et valeur facultatifs. Sortie exacte : {\"total\": entier, \"manquantes\": entier, \"doublons\": entier, \"negatives\": entier}. Une valeur est manquante si absente, None, chaîne vide après strip(), non numérique ou non finie. Une valeur convertible en float fini est valide ; elle est négative si < 0. Identifiant : absent/None donne \"\", sinon str(id).strip(). Chaque occurrence après la première d’un identifiant non vide compte un doublon ; les identifiants vides ne comptent jamais. Les booléens True et False ne sont pas des montants numériques valides et sont ignorés (ou comptés comme manquants pour le bilan).",
+      "starter": "def bilan_qualite(lignes):\n    # TODO : calculer les quatre indicateurs sans transformer les données.\n    raise NotImplementedError(\"À vous de rédiger le bilan\")\n",
+      "sample": {
+        "filename": "capteurs.json",
+        "content": "[\n  {\"id\": \" C-1 \", \"valeur\": \"12.5\"},\n  {\"id\": \"C-1\", \"valeur\": null},\n  {\"id\": \"C-2\", \"valeur\": -4},\n  {\"id\": \"\", \"valeur\": \"indisponible\"}\n]\n"
+      },
+      "constraints": [
+        "Les indicateurs sont indépendants : un doublon peut aussi avoir une valeur manquante.",
+        "Un identifiant absent n’est pas un doublon.",
+        "Les quatre compteurs sont présents même lorsque la liste est vide.",
+        "Ces règles sont pédagogiques : Python conserve les droits du compte et ne fournit pas de confinement de sécurité."
+      ],
+      "success_criteria": [
+        "La somme des indicateurs peut dépasser total, puisqu’ils mesurent des défauts différents.",
+        "NaN et les infinis ne sont pas traités comme des mesures valides.",
+        "L’entrée est inchangée après l’appel."
+      ],
+      "hints": [
+        "Écrivez d’abord un exemple pour chacun des quatre compteurs : leurs règles sont différentes.",
+        "Gardez la mémoire des identifiants rencontrés indépendamment du contrôle de valeur.",
+        "Après conversion, vérifiez que la valeur est finie ; incrémentez ensuite soit manquantes, soit éventuellement negatives."
+      ],
+      "validator_id": "py-bilan-qualite",
+      "estimated_minutes": 20
+    },
+    {
+      "id": "py-extraire-journal",
+      "version": "1.0.0",
+      "title": "Le journal de livraison qui refuse de passer",
+      "domain": "data",
+      "skill_ids": [
+        "data-dates",
+        "py-errors",
+        "py-strings",
+        "data-cleaning"
+      ],
+      "prerequisite_skill_ids": [
+        "py-functions",
+        "py-loops"
+      ],
+      "level": "intermediate",
+      "kind": "debug",
+      "engine": "python",
+      "objective": "Réparer un parseur et distinguer lignes valides, lignes vides et rejets.",
+      "statement": "Le parseur ci-dessous provient d’un prototype : il découpe le mauvais séparateur et suppose que toutes les lignes sont valides. Remplacez ses hypothèses par des contrôles explicites. Écrivez extraire_journal(texte), qui lit les lignes non vides au format date;capteur;valeur. Une ligne invalide doit être comptée comme rejetée, sans interrompre tout le lot.",
+      "input_contract": "Entrée : une chaîne pouvant contenir plusieurs lignes. Ignorez les lignes vides après strip(). Chaque autre ligne doit contenir exactement trois champs séparés par ;. Nettoyez les trois champs. La date doit être une date calendaire réelle au format strict YYYY-MM-DD ; le capteur ne doit pas être vide ; la valeur doit être convertible en float fini. Sortie exacte : {\"valides\": [{\"date\": chaîne ISO, \"capteur\": chaîne, \"valeur\": nombre}], \"rejetees\": entier}. Conservez l’ordre des lignes valides.",
+      "starter": "def extraire_journal(texte):\n    # Prototype volontairement incorrect : trouvez et corrigez ses hypothèses.\n    valides = []\n    for ligne in texte.splitlines():\n        date, capteur, valeur = ligne.split(\",\")\n        valides.append({\"date\": date, \"capteur\": capteur, \"valeur\": float(valeur)})\n    return {\"valides\": valides, \"rejetees\": 0}\n",
+      "sample": {
+        "filename": "livraisons.txt",
+        "content": "2026-02-28; quai-1 ; 12.5\n\n2026-02-30;quai-2;7\n2026-03-01;quai-3;erreur\n2026-03-02;quai-4;-1\n"
+      },
+      "constraints": [
+        "Le 30 février n’est jamais une date valide.",
+        "Une date sans zéros requis, comme 2026-2-1, est rejetée.",
+        "Un champ supplémentaire rend la ligne invalide.",
+        "Aucun réseau ou fichier n’est nécessaire ; la bibliothèque standard suffit.",
+        "Ces règles sont pédagogiques : Python conserve les droits du compte et ne fournit pas de confinement de sécurité."
+      ],
+      "success_criteria": [
+        "Les lignes vides n’augmentent pas rejetees.",
+        "Les lignes invalides ne font pas échouer la fonction.",
+        "Les dates, capteurs et nombres des lignes valides sont normalisés selon le contrat."
+      ],
+      "hints": [
+        "Distinguez la structure d’une ligne de la validité de chacun de ses champs.",
+        "Un contrôle de format ne suffit pas à prouver qu’une date existe dans le calendrier.",
+        "Après validation du nombre de champs, vérifiez une date strictement ISO, un capteur non vide et un nombre fini ; toute autre ligne non vide augmente rejetees."
+      ],
+      "validator_id": "py-extraire-journal",
+      "estimated_minutes": 25
+    },
+    {
+      "id": "sql-filtrer-alertes",
+      "version": "1.0.0",
+      "title": "Les alertes qui méritent une astreinte",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-select",
+        "sql-filter",
+        "sql-order"
+      ],
+      "prerequisite_skill_ids": [],
+      "level": "beginner",
+      "kind": "targeted",
+      "engine": "sql",
+      "objective": "Sélectionner des alertes exploitables avec un ordre stable.",
+      "statement": "La console d’astreinte contient de nombreuses alertes. Retournez seulement celles dont severity vaut exactement critical et dont message n’est pas NULL. Une chaîne vide reste un message présent : ne lui ajoutez pas une règle absente de l’énoncé. Affichez id puis service, triés par service croissant, puis id croissant.",
+      "input_contract": "Table alerts(id INTEGER, service TEXT, severity TEXT, message TEXT). Résultat : deux colonnes nommées id, service, dans cet ordre. Les valeurs SQL NULL suivent les règles SQLite ; l’égalité de severity est sensible à la casse.",
+      "starter": "-- Sélectionnez les deux colonnes et les alertes demandées.\nSELECT\n    -- TODO\n",
+      "sample": {
+        "filename": "alertes.sql",
+        "content": "CREATE TABLE alerts(id INTEGER, service TEXT, severity TEXT, message TEXT);\nINSERT INTO alerts VALUES (1,'api','critical','délai dépassé'),(2,'etl','warning','lot lent'),(3,'api','critical',NULL),(4,'api','critical','');\n"
+      },
+      "constraints": [
+        "Une unique requête de lecture ; aucune modification de table ou de ligne.",
+        "Aucun résultat écrit en dur : le validateur change les données."
+      ],
+      "success_criteria": [
+        "Seules les alertes critical avec message non NULL apparaissent.",
+        "La projection contient exactement id et service.",
+        "L’ordre est déterministe même lorsque plusieurs services sont identiques."
+      ],
+      "hints": [
+        "Commencez par reformuler séparément les deux conditions.",
+        "NULL exige un test de présence ; il ne se compare pas comme une chaîne ordinaire.",
+        "Après le filtre, ajoutez les deux critères de tri dans l’ordre indiqué."
+      ],
+      "validator_id": "sql-filtrer-alertes",
+      "estimated_minutes": 8
+    },
+    {
+      "id": "sql-joindre-commandes",
+      "version": "1.0.0",
+      "title": "Les comptoirs sans vente restent dans le rapport",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-joins",
+        "sql-aggregates"
+      ],
+      "prerequisite_skill_ids": [
+        "sql-select",
+        "sql-filter",
+        "sql-relational"
+      ],
+      "level": "intermediate",
+      "kind": "professional",
+      "engine": "sql",
+      "objective": "Conserver tous les clients et calculer leurs commandes payées.",
+      "statement": "Un responsable souhaite un rapport couvrant tous les clients, même ceux sans commande payée. Pour chaque client, calculez la somme des total des commandes dont status vaut paid et le nombre de ces commandes. Une commande payée avec total NULL compte bien comme commande, mais n’ajoute rien à la somme. Une somme absente vaut 0. Les retours négatifs sont inclus.",
+      "input_contract": "Tables customers(id INTEGER, name TEXT) et orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT). Résultat exact : customer_id, customer_name, total_paid, order_count. Une ligne par client, triée par customer_id croissant. Les clients sans commande payée ont total_paid=0 et order_count=0.",
+      "starter": "-- Construisez le rapport complet, y compris les clients sans commande payée.\nSELECT\n    -- TODO\n",
+      "sample": {
+        "filename": "commandes.sql",
+        "content": "CREATE TABLE customers(id INTEGER, name TEXT);\nCREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT);\nINSERT INTO customers VALUES (1,'Aster'),(2,'Boreal'),(3,'Cirrus');\nINSERT INTO orders VALUES (10,1,20,'paid'),(11,1,NULL,'paid'),(12,2,50,'pending'),(13,1,-5,'paid');\n"
+      },
+      "constraints": [
+        "N’altérez pas les données et n’utilisez pas de valeurs de clients écrites en dur.",
+        "Le filtre des commandes ne doit pas supprimer les clients sans correspondance."
+      ],
+      "success_criteria": [
+        "Tous les clients figurent une seule fois.",
+        "Le nombre de commandes compte les commandes payées, même si total est NULL.",
+        "La somme manquante est remplacée par 0."
+      ],
+      "hints": [
+        "Quel type de jointure conserve un client sans ligne correspondante ?",
+        "Distinguez compter une commande et compter ses montants non NULL.",
+        "Placez le critère paid de façon à préserver la jointure externe et donnez un alias explicite à chaque colonne demandée."
+      ],
+      "validator_id": "sql-joindre-commandes",
+      "estimated_minutes": 20
+    },
+    {
+      "id": "sql-agreger-ventes",
+      "version": "1.0.0",
+      "title": "Les rayons qui franchissent le seuil",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-aggregates",
+        "sql-filter",
+        "sql-order"
+      ],
+      "prerequisite_skill_ids": [
+        "sql-select"
+      ],
+      "level": "intermediate",
+      "kind": "challenge",
+      "engine": "sql",
+      "objective": "Calculer des agrégats cohérents et filtrer les groupes obtenus.",
+      "statement": "Le marché ne met en avant que les catégories totalisant au moins 100 unités monétaires. Ignorez les lignes dont category est NULL. Pour chaque catégorie restante, calculez la somme de amount et le nombre de lignes de vente, y compris celles où amount est NULL. Conservez seulement les catégories dont la somme est supérieure ou égale à 100.",
+      "input_contract": "Table sales(id INTEGER, category TEXT, amount REAL). Résultat exact : category, total_amount, nb_sales. GROUP BY utilise la catégorie telle quelle : ni nettoyage ni changement de casse. Les montants NULL n’ajoutent rien à SUM ; COUNT doit compter toutes les lignes du groupe. Ordre : total_amount décroissant, puis category croissant.",
+      "starter": "-- Formez les groupes, calculez les mesures et filtrez les groupes retenus.\nSELECT\n    -- TODO\n",
+      "sample": {
+        "filename": "ventes.sql",
+        "content": "CREATE TABLE sales(id INTEGER, category TEXT, amount REAL);\nINSERT INTO sales VALUES (1,'outils',80),(2,'outils',30),(3,'outils',NULL),(4,'livres',100),(5,NULL,500),(6,'épices',25);\n"
+      },
+      "constraints": [
+        "Une requête de lecture, sans modifier les données.",
+        "Le seuil est inclusif : un total de 100 doit être retenu."
+      ],
+      "success_criteria": [
+        "Les catégories NULL sont exclues avant le regroupement.",
+        "Le filtrage porte sur la somme du groupe.",
+        "Les colonnes, le comptage et l’ordre respectent le contrat."
+      ],
+      "hints": [
+        "Les conditions sur une ligne et celles sur un groupe n’interviennent pas au même moment.",
+        "COUNT(*) et COUNT(amount) donnent-ils le même résultat si amount est NULL ?",
+        "Utilisez le filtre des groupes pour le seuil, puis deux critères de tri pour départager les totaux égaux."
+      ],
+      "validator_id": "sql-agreger-ventes",
+      "estimated_minutes": 15
+    },
+    {
+      "id": "sql-debug-classement",
+      "version": "1.0.0",
+      "title": "Le podium qui départage mal les ex æquo",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-windows",
+        "sql-order"
+      ],
+      "prerequisite_skill_ids": [
+        "sql-select",
+        "sql-aggregates"
+      ],
+      "level": "intermediate",
+      "kind": "debug",
+      "engine": "sql",
+      "objective": "Corriger un classement par équipe sans perdre les ex æquo.",
+      "statement": "La requête de départ attribue un rang différent à deux scores égaux. Corrigez-la pour produire un rang dense dans chaque équipe : des points égaux partagent le même rang et le rang suivant n’a pas de trou. Conservez toutes les lignes. Dans une partition, les points les plus élevés viennent d’abord ; les points NULL sont classés à la fin.",
+      "input_contract": "Table scores(id INTEGER, team TEXT, points REAL). Résultat exact : id, team, points, rank_in_team. Le classement est calculé séparément pour chaque team, y compris team NULL. Ordre final SQLite : team croissant (NULL en premier), rank_in_team croissant, id croissant. Les points NULL sont égaux entre eux pour le classement.",
+      "starter": "SELECT id, team, points,\n       ROW_NUMBER() OVER (PARTITION BY team ORDER BY points DESC) AS rank_in_team\nFROM scores\nORDER BY team, rank_in_team, id;\n",
+      "sample": {
+        "filename": "classement.sql",
+        "content": "CREATE TABLE scores(id INTEGER, team TEXT, points REAL);\nINSERT INTO scores VALUES (1,'nord',20),(2,'nord',20),(3,'nord',5),(4,'sud',8),(5,'sud',NULL),(6,NULL,2);\n"
+      },
+      "constraints": [
+        "Ne modifiez pas les données et ne supprimez pas les ex æquo.",
+        "Le tri final ne doit pas changer la définition des ex æquo dans la fenêtre."
+      ],
+      "success_criteria": [
+        "Les scores égaux d’une équipe ont le même rang.",
+        "Le rang suivant un groupe d’ex æquo augmente de 1.",
+        "Toutes les lignes et les partitions NULL sont conservées."
+      ],
+      "hints": [
+        "Comparez les propriétés de ROW_NUMBER, RANK et DENSE_RANK.",
+        "La partition délimite les compétiteurs ; le tri de la fenêtre définit l’égalité de score.",
+        "Un identifiant ajouté au tri de la fenêtre départagerait artificiellement les ex æquo : réservez-le au tri final."
+      ],
+      "validator_id": "sql-debug-classement",
+      "estimated_minutes": 20
+    },
+    {
+      "id": "schema-atelier",
+      "version": "1.0.0",
+      "title": "La bibliothèque des ateliers de robots",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-relational",
+        "sql-constraints",
+        "sql-write"
+      ],
+      "prerequisite_skill_ids": [
+        "sql-select"
+      ],
+      "level": "intermediate",
+      "kind": "mini_project",
+      "engine": "schema",
+      "objective": "Créer un petit schéma dont les contraintes empêchent des inscriptions incohérentes.",
+      "statement": "Une médiathèque organise des ateliers pour robots curieux. Créez les tables apprenants et inscriptions dans une base vide. Un apprenant possède une identité, un nom obligatoire et une adresse électronique obligatoire et unique. Une inscription appartient à un apprenant existant. Un apprenant ne peut pas être inscrit deux fois au même atelier. Supprimer un apprenant doit supprimer ses inscriptions.",
+      "input_contract": "Table apprenants : id INTEGER PRIMARY KEY ; nom TEXT NOT NULL ; email TEXT NOT NULL UNIQUE. Table inscriptions : id INTEGER PRIMARY KEY ; apprenant_id INTEGER NOT NULL REFERENCES apprenants(id) ON DELETE CASCADE ; atelier TEXT NOT NULL ; inscrit_le TEXT NOT NULL ; UNIQUE(apprenant_id, atelier). Ce lot ne demande pas de vérifier le format d’email ou de date. Utilisez exactement ces noms de tables et de colonnes.",
+      "starter": "-- La base d’évaluation est vide. Les clés étrangères y sont activées.\n-- TODO : créer apprenants puis inscriptions avec les contraintes demandées.\n",
+      "sample": {
+        "filename": "atelier_exemples.json",
+        "content": "{\n  \"apprenant\": {\"id\": 1, \"nom\": \"Robo-Mina\", \"email\": \"mina@example.test\"},\n  \"inscription\": {\"id\": 10, \"apprenant_id\": 1, \"atelier\": \"Capteurs\", \"inscrit_le\": \"2026-04-12\"},\n  \"cas_a_refuser\": [\"adresse électronique dupliquée\", \"apprenant inexistant\", \"même apprenant et même atelier\"]\n}\n"
+      },
+      "constraints": [
+        "Créez le schéma avec de vraies contraintes SQLite, sans triggers qui simulent les résultats.",
+        "N’insérez pas de jeu de données permanent ; les exemples sont fournis pour vos essais.",
+        "N’ajoutez pas de contrainte métier absente du contrat."
+      ],
+      "success_criteria": [
+        "Les noms, types déclarés, clés et champs obligatoires sont présents.",
+        "Une adresse dupliquée, une référence absente et une inscription dupliquée sont refusées.",
+        "La suppression d’un apprenant supprime réellement ses inscriptions."
+      ],
+      "hints": [
+        "Distinguez l’identité d’une inscription de la règle qui interdit une seconde inscription au même atelier.",
+        "Une contrainte d’unicité peut porter sur une paire de colonnes.",
+        "La suppression en cascade se déclare sur la référence portée par inscriptions ; vérifiez aussi NOT NULL sur les champs obligatoires."
+      ],
+      "validator_id": "schema-atelier",
+      "estimated_minutes": 30
+    },
+    {
+      "id": "schema-stocks",
+      "version": "1.0.0",
+      "title": "Le stock d’expédition à deux dimensions",
+      "domain": "sql",
+      "skill_ids": [
+        "sql-relational",
+        "sql-constraints",
+        "sql-write"
+      ],
+      "prerequisite_skill_ids": [
+        "sql-relational",
+        "sql-constraints"
+      ],
+      "level": "advanced",
+      "kind": "mini_project",
+      "engine": "schema",
+      "objective": "Modéliser un stock par produit et dépôt avec une clé composite et des règles vérifiables.",
+      "statement": "La flotte spatiale stocke un même produit dans plusieurs dépôts. Créez produits et stocks dans une base vide. Un SKU identifie un produit de façon unique. Une ligne de stock est identifiée par la paire produit_id et depot ; chaque quantité est obligatoire et ne peut pas être négative. Un produit encore stocké ne peut pas être supprimé. Ce défi est le plus exigeant de ce premier lot : plusieurs contraintes doivent coopérer.",
+      "input_contract": "Table produits : id INTEGER PRIMARY KEY ; sku TEXT NOT NULL UNIQUE. Table stocks : produit_id INTEGER NOT NULL REFERENCES produits(id) ; depot TEXT NOT NULL ; quantite INTEGER NOT NULL CHECK(quantite >= 0) ; PRIMARY KEY(produit_id, depot). La référence produit ne doit pas supprimer les stocks en cascade : NO ACTION ou RESTRICT convient. Utilisez exactement ces noms. Aucune règle supplémentaire sur dépôt, SKU ou quantité entière stricte n’est demandée au-delà des types et contraintes indiqués.",
+      "starter": "-- La base d’évaluation est vide et les clés étrangères sont activées.\n-- TODO : créer produits et stocks ; la paire produit/dépôt est l’identité du stock.\n",
+      "sample": {
+        "filename": "stocks_exemples.json",
+        "content": "{\n  \"produit\": {\"id\": 1, \"sku\": \"CAP-ION\"},\n  \"stocks_valides\": [\n    {\"produit_id\": 1, \"depot\": \"orbite\", \"quantite\": 0},\n    {\"produit_id\": 1, \"depot\": \"surface\", \"quantite\": 12}\n  ],\n  \"cas_a_refuser\": [\"même produit et même dépôt\", \"quantité négative\", \"produit absent\", \"suppression d’un produit encore stocké\"]\n}\n"
+      },
+      "constraints": [
+        "La clé primaire doit être composite ; n’utilisez pas une colonne artificielle à sa place.",
+        "La cohérence doit rester vraie lors d’un UPDATE comme d’un INSERT.",
+        "Le zéro est une quantité valide.",
+        "N’insérez pas les exemples dans le script soumis.",
+        "Utilisez des contraintes SQLite déclarées, sans trigger."
+      ],
+      "success_criteria": [
+        "Un produit peut exister dans plusieurs dépôts et un dépôt peut contenir plusieurs produits.",
+        "Une même paire produit/dépôt ne peut apparaître qu’une fois.",
+        "NULL, quantité négative, référence inexistante et suppression d’un parent utilisé sont refusés.",
+        "Les lignes valides restent insérables et modifiables."
+      ],
+      "hints": [
+        "Commencez par identifier ce qui distingue réellement deux lignes de stock.",
+        "Une clé sur produit_id seul empêcherait plusieurs dépôts ; une clé sur depot seul empêcherait plusieurs produits.",
+        "Déclarez la clé sur la paire, les deux champs de clé obligatoires, puis la référence et la contrainte de quantité ; testez également un UPDATE négatif."
+      ],
+      "validator_id": "schema-stocks",
+      "estimated_minutes": 40
+    }
+  ]
+}

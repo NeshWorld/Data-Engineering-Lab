@@ -1,6 +1,7 @@
 """Loopback-only HTTP adapter. No project directory is exposed as a file server."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import csv
 from pathlib import Path
 import sqlite3
 from urllib.parse import urlsplit, parse_qs
@@ -14,7 +15,7 @@ class Server(ThreadingHTTPServer):
         self.lab=lab
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='DataEngineeringLab/1.1'
+    server_version='DataEngineeringLab/1.2'
     def setup(self):
         super().setup()
         self.connection.settimeout(15)
@@ -64,13 +65,23 @@ class Handler(BaseHTTPRequestHandler):
             path=parsed.path
             query={k:v[0] for k,v in parse_qs(parsed.query).items()}
             lab=self.server.lab
-            if method=='GET' and path in ('/','/index.html','/style.css','/app.js','/themes.js','/themes.css','/python-editor.js','/er-diagram.js','/er-diagram.css'):
+            if method=='GET' and path in ('/','/index.html','/style.css','/app.js','/themes.js','/themes.css','/python-editor.js','/er-diagram.js','/er-diagram.css','/practice.js','/practice.css','/sandbox.js'):
                 filename='index.html' if path in ('/','/index.html') else path[1:]
                 content=(lab.root/'web'/filename).read_bytes()
                 self.respond(200,content,('text/html' if filename.endswith('.html') else 'text/css' if filename.endswith('.css') else 'text/javascript')+'; charset=utf-8')
                 return
             if method=='GET':
-                if path=='/api/preferences':
+                if path=='/api/training/catalog':
+                    data=lab.training.catalog()
+                elif path=='/api/training/exercise':
+                    data=lab.training.exercise(query.get('id'))
+                elif path=='/api/training/attempt':
+                    data=lab.training.attempt(query.get('id'))
+                elif path=='/api/sandbox/info':
+                    data=lab.sandbox.info(query.get('env_id'))
+                elif path=='/api/sandbox/export':
+                    data=lab.sandbox.export(query.get('env_id'),query.get('table'),query.get('format'))
+                elif path=='/api/preferences':
                     data=lab.preferences()
                 elif path=='/api/state':
                     data=lab.state()
@@ -100,7 +111,13 @@ class Handler(BaseHTTPRequestHandler):
                 if not isinstance(args,dict):
                     raise ValueError('Objet JSON attendu.')
                 eid=args.get('env_id')
-                if path=='/api/preferences':
+                training_actions={'/api/training/start':'start','/api/training/save':'save','/api/training/hint':'hint','/api/training/validate':'validate','/api/training/cancel':'cancel'}
+                sandbox_actions={'/api/sandbox/create':'create','/api/sandbox/duplicate':'duplicate','/api/sandbox/action':'action','/api/sandbox/import':'import_data'}
+                if path in training_actions:
+                    data=getattr(lab.training,training_actions[path])(args)
+                elif path in sandbox_actions:
+                    data=getattr(lab.sandbox,sandbox_actions[path])(args)
+                elif path=='/api/preferences':
                     data=lab.preferences(args)
                 elif path=='/api/environment':
                     data=lab.create_environment(args)
@@ -130,7 +147,7 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(200,dict(ok=True,data=data))
         except PermissionError as exc:
             self.respond(403,dict(ok=False,error=str(exc)))
-        except (ValueError,TypeError,KeyError,sqlite3.Error,TimeoutError) as exc:
+        except (ValueError,TypeError,KeyError,sqlite3.Error,csv.Error,TimeoutError,RecursionError) as exc:
             self.respond(400,dict(ok=False,error=str(exc)))
         except Exception as exc:
             self.respond(500,dict(ok=False,error='Échec de l’opération : '+str(exc)))

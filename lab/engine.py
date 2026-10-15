@@ -46,6 +46,22 @@ class Lab:
                                ('events','Événements applicatifs'),('imperfect','Données imparfaites')]:
                 self.create_environment(dict(name=name,kind=kind,seed=42,size=300,anomalies=False))
 
+    @property
+    def training(self):
+        with self.lock:
+            if not hasattr(self,'_training_service'):
+                from .training import Training
+                self._training_service=Training(self)
+            return self._training_service
+
+    @property
+    def sandbox(self):
+        with self.lock:
+            if not hasattr(self,'_sandbox_service'):
+                from .sandbox import Sandbox
+                self._sandbox_service=Sandbox(self)
+            return self._sandbox_service
+
     def connect(self):
         return database(self.catalog, timeout=10)
 
@@ -148,6 +164,8 @@ class Lab:
     def regenerate(self, eid, anomalies=False):
         with self.lock:
             env = self.get('environments',eid)
+            if env['kind']=='custom':
+                raise ValueError('Un environnement personnalisé se restaure depuis un snapshot ou se recrée dans le Bac à sable.')
             stats = generate(Path(env['db_path']),env['kind'],env['seed'],env['size'],anomalies)
             env.update(anomalies=anomalies,stats=stats,generator_version=GENERATOR_VERSION)
             return self.put('environments',env)

@@ -31,3 +31,13 @@ Une réinitialisation ou restauration ne supprime jamais `experiments/` ni les h
 Pas de PostgreSQL, Parquet (pyarrow absent), ordonnanceur distribué, packaging Tauri, éditeur IDE complet, graphe de pipeline déplaçable à la souris, ni authentification multi-utilisateur. L'éditeur intégré reste simple. Les limites graphiques et tests effectivement exécutés figurent dans le rapport de livraison.
 
 La reproduction par graine suppose la même version du générateur (champ generator_version). Une sauvegarde ou un espace de run conserve les données effectives et permet leur inspection après une mise à jour du générateur.
+
+## Entraînement et opérations structurées
+
+Le nom « Bac à sable » désigne un espace d’expérimentation : il ne fournit pas de confinement système. La validation Python requiert le même consentement que l’atelier et conserve les droits du compte. Les contraintes pédagogiques interdisant réseau/fichiers ne sont pas des barrières de sécurité. Les tests locaux ne sont pas un système anti-triche : le propriétaire du poste contrôle son code, les validateurs et les fichiers. Les solutions de référence restent réservées aux tests et ne sont pas servies par l’API.
+
+Chaque validation possède trois cas, un délai Python de trois secondes par cas et un budget vérifié de vingt secondes entre les cas ; une opération déjà engagée reste soumise à son propre délai. La sortie structurée Python est limitée à 1 Mo ; le code à 200 000 caractères et les notes à 5 000. Une réponse incorrecte, une annulation et une erreur technique ont des états distincts. Une réussite ne certifie pas la maîtrise d’une compétence.
+
+Les nouveaux endpoints conservent les vérifications Host/Origin et le plafond HTTP de 1 Mo. Les imports acceptent du texte CSV/JSON de 750 Kio maximum et 10 000 lignes, sans chemin de fichier fourni au serveur. Ils refusent les objets imbriqués et valeurs non finies. Les identifiants SQL sont cités et les valeurs liées. Les éditions/suppressions de lignes exigent une clé primaire complète et une seule ligne correspondante ; l’interface refuse les entiers dont JavaScript perdrait la précision. L’export limite à 10 000 lignes et 5 Mo sans troncature silencieuse ; les BLOB ne sont pas exportés par ce premier lot.
+
+Les snapshots automatiques protègent les opérations destructrices des formulaires. Le SQL libre et Python conservent les comportements et limites des ateliers : créer un snapshot manuel avant une expérimentation risquée reste possible. Les fichiers personnels ne sont jamais utilisés comme fixtures d’évaluation.
