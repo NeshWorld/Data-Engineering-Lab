@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import threading
+import time
 import unittest
 from lab.engine import Lab
 from lab.server import Server
@@ -42,11 +43,49 @@ class ServerCase(unittest.TestCase):
         self.assertEqual(self.post('/api/preferences',{'theme':'amethyst'})[0],200)
         self.assertEqual(self.request('GET','/api/preferences')[2]['data']['theme'],'amethyst')
         self.assertEqual(self.post('/api/preferences',{'theme':'invalid'})[0],400)
-        for filename in ['themes.js','themes.css','python-editor.js','er-diagram.js','er-diagram.css']:
+        for filename in ['themes.js','themes.css','python-editor.js','er-diagram.js','er-diagram.css','practice.js','practice.css','sandbox.js']:
             (self.root/'web'/filename).write_text('/* fixture */',encoding='utf-8')
             status,headers,_=self.request('GET','/'+filename)
             self.assertEqual(status,200)
             self.assertIn('text/css' if filename.endswith('.css') else 'text/javascript',headers['Content-Type'])
+
+    def test_sandbox_create_structured_crud_export_import_restore(self):
+        status,_,response=self.post('/api/sandbox/create',dict(name='Libre HTTP',table_count=0))
+        self.assertEqual(status,200,response);eid=response['data']['id']
+        status,_,info=self.request('GET','/api/sandbox/info?env_id='+eid);self.assertEqual(status,200);self.assertTrue(info['data']['is_sandbox'])
+        status,_,result=self.post('/api/sandbox/action',dict(env_id=eid,operation='create_table',table='notes',columns=[dict(name='id',type='INTEGER',primary_key=True),dict(name='value',type='TEXT')]))
+        self.assertEqual(status,200,result)
+        self.assertEqual(self.post('/api/sandbox/action',dict(env_id=eid,operation='insert_row',table='notes',values={'id':1,'value':'conservé'}))[0],200)
+        status,_,changed=self.post('/api/sandbox/action',dict(env_id=eid,operation='delete_row',table='notes',key={'id':1}));self.assertEqual(status,200,changed)
+        self.assertEqual(self.post('/api/restore',dict(env_id=eid,snapshot_id=changed['data']['snapshot_id']))[0],200)
+        status,_,export=self.request('GET','/api/sandbox/export?env_id='+eid+'&table=notes&format=json')
+        self.assertEqual(status,200,export);self.assertEqual(json.loads(export['data']['content']),[{'id':1,'value':'conservé'}])
+        self.assertEqual(self.post('/api/sandbox/import',dict(env_id=eid,table='bad',format='csv',text='a,b\n"unclosed'))[0],400)
+        self.assertEqual(self.post('/api/sandbox/duplicate',dict(env_id=eid,name='Autre copie'))[0],200)
+
+    def test_training_http_real_validation_hints_and_durable_progress(self):
+        status,_,catalog=self.request('GET','/api/training/catalog');self.assertEqual(status,200,catalog)
+        self.assertEqual(len(catalog['data']['exercises']),10);self.assertEqual(len(catalog['data']['skills']),55)
+        self.assertTrue(all('hints' not in e and 'validator_id' not in e and 'solution' not in e for e in catalog['data']['exercises']))
+        eid='py-normaliser-evenements'
+        status,_,opened=self.post('/api/training/start',{'exercise_id':eid});self.assertEqual(status,200,opened)
+        self.assertEqual(opened['data']['progress']['status'],'started');self.assertEqual(opened['data']['hints'],[])
+        status,_,hints=self.post('/api/training/hint',{'exercise_id':eid});self.assertEqual(status,200);self.assertEqual(hints['data']['revealed_count'],1)
+        code="def normaliser_evenements(lignes):\n    vus=set()\n    resultat=[]\n    for ligne in lignes:\n        brut=ligne.get('id')\n        ident='' if brut is None else str(brut).strip()\n        if not ident or ident in vus: continue\n        ville=ligne.get('ville')\n        vus.add(ident)\n        resultat.append({'id':ident,'ville':'' if ville is None else str(ville).strip().title()})\n    return resultat\n"
+        self.assertEqual(self.post('/api/training/validate',{'exercise_id':eid,'code':code})[0],403)
+        self.post('/api/python_ack',{'accepted':True})
+        self.assertEqual(self.post('/api/training/save',{'exercise_id':eid,'code':code,'notes':'À revoir les données vides','needs_review':True})[0],200)
+        status,_,started=self.post('/api/training/validate',{'exercise_id':eid,'code':code});self.assertEqual(status,200,started)
+        aid=started['data']['attempt_id'];deadline=time.monotonic()+10
+        while True:
+            status,_,attempt=self.request('GET','/api/training/attempt?id='+aid);self.assertEqual(status,200)
+            if attempt['data']['status']!='running':break
+            self.assertLess(time.monotonic(),deadline);time.sleep(.02)
+        self.assertEqual(attempt['data']['status'],'success',attempt);self.assertEqual(attempt['data']['passed'],3)
+        progress=self.request('GET','/api/training/exercise?id='+eid)[2]['data']['progress']
+        self.assertEqual(progress['status'],'completed');self.assertTrue(progress['needs_review']);self.assertEqual(progress['attempt_count'],1)
+        self.assertEqual(self.request('GET','/api/training/attempt?id=../../invalid')[0],400)
+        self.assertEqual(self.post('/api/training/save',{'exercise_id':eid,'code':'x','notes':'x'*5001})[0],400)
 
     def test_host_origin_fetch_site_controls(self):
         for headers in [{'Host':'attacker.example'},{'Host':'127.0.0.1:1'},{'Origin':'https://attacker.example'},{'Origin':'null'},{'Sec-Fetch-Site':'cross-site'}]:

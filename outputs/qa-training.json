@@ -1,0 +1,91 @@
+{
+  "/api/state": {
+    "status": 200,
+    "bytes": 311389
+  },
+  "/api/training/catalog": {
+    "status": 200,
+    "bytes": 49744
+  },
+  "personal_training": {
+    "skills": 55,
+    "exercises": 10,
+    "progress_entries": 0
+  },
+  "/practice.js": {
+    "status": 200,
+    "bytes": 26610
+  },
+  "/practice.css": {
+    "status": 200,
+    "bytes": 7931
+  },
+  "/sandbox.js": {
+    "status": 200,
+    "bytes": 31296
+  },
+  "personal_files": {
+    "count": 15,
+    "changed": []
+  },
+  "existing_catalog": {
+    "environments": {
+      "count": 5,
+      "unchanged": true
+    },
+    "artifacts": {
+      "count": 0,
+      "unchanged": true
+    },
+    "runs": {
+      "original_count": 29,
+      "current_count": 31,
+      "originals_unchanged": true,
+      "new_consultation_runs": 2
+    },
+    "snapshots": {
+      "count": 0,
+      "unchanged": true
+    }
+  },
+  "automated_tests": {
+    "python": 102,
+    "javascript": 96,
+    "failed": 0,
+    "ten_correct_submissions_real_cases": 30
+  },
+  "browser": {
+    "resolutions": [
+      [
+        1440,
+        1000
+      ],
+      [
+        1024,
+        768
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "console_errors_final": [],
+    "download_csv_verified": true,
+    "actions": [
+      "visual create table",
+      "insert row",
+      "update row",
+      "restore automatic snapshot",
+      "generate related tables",
+      "import CSV",
+      "download exported CSV",
+      "multi-skill any/all filters",
+      "Python failure and success",
+      "SQL success",
+      "DDL success",
+      "hints on demand",
+      "draft notes review persistence after server restart",
+      "breadcrumb home on all ten non-home pages"
+    ]
+  }
+}

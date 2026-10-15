@@ -9,3 +9,5 @@
 .data-table{width:max-content;min-width:100%}.data-table .cell-value{display:block;max-width:480px;overflow:hidden;text-overflow:ellipsis;white-space:pre}.data-table td{white-space:nowrap}
 
 .table-scroll>table{width:max-content;min-width:100%}.table-scroll td{white-space:nowrap}
+/* Accessible links in the breadcrumb keep the sidebar navigation styles separate. */
+nav.breadcrumb{display:flex;align-items:center;gap:6px;overflow:visible;flex-wrap:wrap}nav.breadcrumb>a,nav.breadcrumb #breadcrumb-parent>a{display:inline-flex;padding:4px 5px;border-radius:4px;color:var(--muted);font-size:inherit;white-space:nowrap}nav.breadcrumb a:hover{color:var(--text);background:var(--hover-bg)}nav.breadcrumb a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}#breadcrumb-parent:not([hidden]){display:inline-flex;align-items:center;gap:6px}#breadcrumb-parent[hidden]{display:none}

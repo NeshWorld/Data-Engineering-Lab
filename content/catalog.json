@@ -1,0 +1,1328 @@
+{
+  "version": "1.0.0",
+  "sources": [
+    {
+      "id": "de-plan",
+      "title": "Data Engineering and ETL",
+      "kind": "study_plan",
+      "pages": 14,
+      "sha256": "38513651e27f986de854d7c7233950cb4c343e9666b0cd59389416fe342c3c31"
+    },
+    {
+      "id": "python-plan",
+      "title": "Python Developer",
+      "kind": "study_plan",
+      "pages": 14,
+      "sha256": "549b159fbba8c3fc5a4aba88ded1fc370242f55980bc7dea75a6e05d4236e1fe"
+    }
+  ],
+  "domains": [
+    {
+      "id": "python",
+      "name": "Python et programmation"
+    },
+    {
+      "id": "sql",
+      "name": "SQL et conception de bases"
+    },
+    {
+      "id": "data",
+      "name": "Manipulation et analyse des données"
+    },
+    {
+      "id": "math",
+      "name": "Statistiques et mathématiques"
+    },
+    {
+      "id": "etl",
+      "name": "Data Engineering et ETL"
+    },
+    {
+      "id": "nosql",
+      "name": "NoSQL et systèmes de données"
+    },
+    {
+      "id": "infrastructure",
+      "name": "Linux, Docker et outils"
+    },
+    {
+      "id": "ai",
+      "name": "Intelligence artificielle et technologies associées"
+    }
+  ],
+  "skills": [
+    {
+      "id": "py-basics",
+      "name": "Manipuler les valeurs et les types",
+      "domain": "python",
+      "description": "Écrire de petites expressions Python, convertir des valeurs et comprendre les booléens.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            1,
+            2
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-conditions",
+      "name": "Prendre des décisions dans un programme",
+      "domain": "python",
+      "description": "Construire des conditions explicites et traiter plusieurs branches.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            2
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-basics"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-loops",
+      "name": "Parcourir des données et raisonner sur un algorithme",
+      "domain": "python",
+      "description": "Construire des boucles et comprendre les étapes et les cas limites d’un algorithme simple.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            2,
+            3
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            2,
+            3
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-conditions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-functions",
+      "name": "Décomposer un traitement en fonctions",
+      "domain": "python",
+      "description": "Définir des paramètres, des valeurs de retour et des portées ; repérer les possibilités de composition et de récursion.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            2,
+            3
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            2,
+            3,
+            4,
+            9
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-basics"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-strings",
+      "name": "Nettoyer et découper des chaînes",
+      "domain": "python",
+      "description": "Rechercher, normaliser, découper et reformater un texte sans confondre son contenu et sa représentation.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            2,
+            5
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            2,
+            3
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-basics"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-collections",
+      "name": "Choisir et transformer des collections",
+      "domain": "python",
+      "description": "Utiliser listes, tuples, dictionnaires et ensembles selon les besoins de recherche, d’ordre et d’unicité.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            2,
+            5
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            4,
+            5
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-basics"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-comprehensions",
+      "name": "Exprimer des transformations de collections",
+      "domain": "python",
+      "description": "Combiner parcours, filtrage et construction de collections lisibles.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-loops",
+        "py-collections"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-iterators",
+      "name": "Produire des données progressivement",
+      "domain": "python",
+      "description": "Distinguer collection, itérateur et générateur et comprendre un parcours différé.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            5,
+            6
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-loops",
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-files",
+      "name": "Lire et écrire des fichiers de façon maîtrisée",
+      "domain": "python",
+      "description": "Manipuler les modes d’ouverture, les context managers et les formats de fichiers en prévoyant les erreurs.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            5,
+            6
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            7,
+            8
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-errors",
+      "name": "Diagnostiquer les erreurs et journaliser",
+      "domain": "python",
+      "description": "Lire un traceback, distinguer les exceptions et rendre un traitement observable.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-oop",
+      "name": "Structurer un modèle avec des objets",
+      "domain": "python",
+      "description": "Relier classes, instances, méthodes et héritage, sans déduire la profondeur des notions à partir du plan.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            6
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            8,
+            9
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-typing",
+      "name": "Décrire les contrats avec les types",
+      "domain": "python",
+      "description": "Lire et écrire des annotations et identifier les usages de dataclass et Enum.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            13
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions",
+        "py-oop"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-testing",
+      "name": "Tester, relire et mesurer son code",
+      "domain": "python",
+      "description": "Construire des vérifications reproductibles, améliorer la lisibilité et identifier les outils de mesure du code.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            3,
+            6,
+            13
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions",
+        "py-errors"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-async",
+      "name": "Distinguer concurrence et parallélisme",
+      "domain": "python",
+      "description": "Repérer les différences entre processus, threads et tâches asyncio.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "py-regex",
+      "name": "Reconnaître des motifs textuels",
+      "domain": "python",
+      "description": "Construire et expliquer des recherches par expressions régulières avec groupes et répétitions.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            13,
+            14
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-strings"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-select",
+      "name": "Projeter les données utiles",
+      "domain": "sql",
+      "description": "Choisir des colonnes et des expressions à partir d’une table.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            9
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            11
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-filter",
+      "name": "Filtrer sans perdre le sens de NULL",
+      "domain": "sql",
+      "description": "Exprimer des conditions, des comparaisons et le traitement des valeurs absentes.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            9,
+            10
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            11
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-select"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-order",
+      "name": "Rendre un résultat SQL déterministe",
+      "domain": "sql",
+      "description": "Définir un ordre complet et comprendre les limites et le décalage.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10,
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-select"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-joins",
+      "name": "Relier des tables sans perdre des lignes",
+      "domain": "sql",
+      "description": "Choisir une jointure et expliquer la présence ou l’absence des enregistrements non appariés.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-filter",
+        "sql-relational"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-aggregates",
+      "name": "Résumer des groupes de lignes",
+      "domain": "sql",
+      "description": "Définir le grain d’une agrégation et distinguer le filtrage des lignes et des groupes.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-select"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-windows",
+      "name": "Calculer dans une partition SQL",
+      "domain": "sql",
+      "description": "Conserver le détail des lignes tout en calculant des classements ou des mesures par partition.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-order",
+        "sql-aggregates"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-write",
+      "name": "Modifier les données et composer des requêtes",
+      "domain": "sql",
+      "description": "Insérer, mettre à jour et supprimer des lignes ; lire des sous-requêtes et des CTE.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            11,
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-filter"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-relational",
+      "name": "Concevoir un schéma relationnel",
+      "domain": "sql",
+      "description": "Définir les entités, les relations, les clés et le grain d’une table ; lire un diagramme ER.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            11,
+            12
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-constraints",
+      "name": "Faire respecter l’intégrité des données",
+      "domain": "sql",
+      "description": "Utiliser clés primaires, références et contraintes de cohérence, y compris une clé composite.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            11
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-relational"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-transactions",
+      "name": "Raisonner sur transactions et index",
+      "domain": "sql",
+      "description": "Identifier les rôles de l’atomicité, des index et de l’organisation transactionnelle ou analytique.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-write",
+        "sql-constraints"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "sql-orm",
+      "name": "Relier objets Python et tables",
+      "domain": "sql",
+      "description": "Reconnaître les opérations de mapping et de requêtage d’un ORM comme SQLAlchemy.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-oop",
+        "sql-relational"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-json-csv",
+      "name": "Échanger des données CSV et JSON",
+      "domain": "data",
+      "description": "Lire des formats tabulaires et structurés, préserver les types attendus et traiter les entrées invalides.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            5,
+            6
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            7
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-files",
+        "py-collections"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-numpy",
+      "name": "Manipuler des tableaux numériques",
+      "domain": "data",
+      "description": "Créer et indexer des tableaux NumPy en distinguant dimensions et valeurs.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-collections"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-pandas",
+      "name": "Transformer et agréger des DataFrame",
+      "domain": "data",
+      "description": "Sélectionner, combiner, grouper et réorganiser des données avec pandas.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            6,
+            7
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-collections"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-cleaning",
+      "name": "Détecter et traiter les défauts de données",
+      "domain": "data",
+      "description": "Définir explicitement les valeurs manquantes, les doublons et les anomalies avant de les corriger.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            7
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-conditions",
+        "py-collections"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-dates",
+      "name": "Interpréter et formater des dates",
+      "domain": "data",
+      "description": "Distinguer le texte d’une date valide et choisir un format explicite de lecture et d’écriture.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            7
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-strings",
+        "py-errors"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "data-visualization",
+      "name": "Choisir une représentation des données",
+      "domain": "data",
+      "description": "Relier une question à un graphique et identifier les possibilités de pandas et matplotlib.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            7
+          ]
+        }
+      ],
+      "prerequisites": [
+        "data-pandas"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "math-functions",
+      "name": "Lire fonctions et coordonnées",
+      "domain": "math",
+      "description": "Relier ensembles, fonctions et coordonnées aux objets manipulés en analyse.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            3,
+            4
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "math-vectors",
+      "name": "Raisonner sur des vecteurs",
+      "domain": "math",
+      "description": "Identifier opérations, norme, distance et produit scalaire dans le plan fourni.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            4
+          ]
+        }
+      ],
+      "prerequisites": [
+        "math-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "math-matrices",
+      "name": "Raisonner sur des matrices",
+      "domain": "math",
+      "description": "Distinguer formes, opérations, produit, déterminant et inverse.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            4,
+            5
+          ]
+        }
+      ],
+      "prerequisites": [
+        "math-vectors"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "math-probability",
+      "name": "Décrire un événement probabiliste",
+      "domain": "math",
+      "description": "Différencier population, échantillon et événements sans attribuer une précision absente du plan.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "math-statistics",
+      "name": "Résumer une distribution",
+      "domain": "math",
+      "description": "Choisir des indicateurs de position et distinguer données numériques et catégories.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "prerequisites": [
+        "math-probability"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "etl-overview",
+      "name": "Situer les étapes d’une chaîne ETL",
+      "domain": "etl",
+      "description": "Relier extraction, transformation et chargement aux objectifs d’un traitement de données.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            1,
+            13
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "etl-airflow",
+      "name": "Repérer les composants d’une orchestration",
+      "domain": "etl",
+      "description": "Identifier DAG, opérateurs, hooks et sensors dans un parcours Airflow ; aucun serveur Airflow n’est simulé.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            13
+          ]
+        }
+      ],
+      "prerequisites": [
+        "etl-overview"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "etl-quality-performance",
+      "name": "Diagnostiquer qualité et coût d’un traitement",
+      "domain": "etl",
+      "description": "Relier collecte, contrôles de qualité, plan d’exécution et efficacité SQL à une question concrète.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            14
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-filter"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "nosql-documents",
+      "name": "Comprendre un modèle documentaire",
+      "domain": "nosql",
+      "description": "Relier collections, documents, filtres et opérations CRUD dans le modèle MongoDB.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            11,
+            12
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "nosql-keyvalue",
+      "name": "Comprendre un stockage clé-valeur",
+      "domain": "nosql",
+      "description": "Identifier le modèle clé-valeur et sa référence à Redis, sans moteur Redis intégré.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            13,
+            14
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "nosql-column-graph",
+      "name": "Comparer les modèles non relationnels",
+      "domain": "nosql",
+      "description": "Repérer les modèles hiérarchique, réseau, graphe et colonnaire.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            13,
+            14
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "nosql-distribution",
+      "name": "Repérer les compromis des systèmes distribués",
+      "domain": "nosql",
+      "description": "Distinguer les notions de CAP, réplication et sharding référencées dans le programme.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "prerequisites": [
+        "sql-relational"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-linux",
+      "name": "Se repérer dans un système et son terminal",
+      "domain": "infrastructure",
+      "description": "Identifier fichiers, permissions, arguments et opérations élémentaires du shell.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            1,
+            12
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            6,
+            9,
+            10
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-network",
+      "name": "Comprendre les échanges réseau",
+      "domain": "infrastructure",
+      "description": "Relier unités d’information, IP, URL, HTTP et rôles client-serveur.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            3
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-git",
+      "name": "Versionner un projet avec Git",
+      "domain": "infrastructure",
+      "description": "Distinguer dépôt local, dépôt distant et publication GitHub.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            12,
+            13
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            6
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-docker",
+      "name": "Décrire un environnement conteneurisé",
+      "domain": "infrastructure",
+      "description": "Identifier image, conteneur, construction et instructions Dockerfile ; Docker n’est pas exécuté par ce lot.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            13
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "prerequisites": [
+        "infra-linux"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-environments",
+      "name": "Organiser modules et environnements Python",
+      "domain": "infrastructure",
+      "description": "Relier modules, packages, dépendances, environnement virtuel, IDE et notebooks.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            3,
+            6
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            6
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-functions"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "infra-web",
+      "name": "Repérer les données dans des documents Web",
+      "domain": "infrastructure",
+      "description": "Distinguer HTML, CSS et XML et les usages de parsing référencés dans le parcours Python.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "python-plan",
+          "pages": [
+            7,
+            10,
+            11
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-strings"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "ai-ml",
+      "name": "Situer modèles et régression",
+      "domain": "ai",
+      "description": "Identifier entraînement, features, mise à l’échelle et régression dans le parcours, sans moteur de ML simulé.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            1,
+            7,
+            9
+          ]
+        }
+      ],
+      "prerequisites": [
+        "math-statistics"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "ai-nlp",
+      "name": "Repérer une chaîne de préparation textuelle",
+      "domain": "ai",
+      "description": "Identifier tokenisation, lemmatisation, représentations de mots et similarité.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "prerequisites": [
+        "py-strings"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "ai-prompt",
+      "name": "Formuler une demande et en vérifier le résultat",
+      "domain": "ai",
+      "description": "Repérer les familles de prompting et les limites d’une sortie générée.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "prerequisites": [],
+      "needs_deepening": true
+    },
+    {
+      "id": "ai-api",
+      "name": "Identifier API, outils IA et intégrations",
+      "domain": "ai",
+      "description": "Situer API, variables d’environnement, LangChain, outils de développement IA et protocoles associés.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            8,
+            9,
+            11
+          ]
+        },
+        {
+          "source_id": "python-plan",
+          "pages": [
+            6,
+            7
+          ]
+        }
+      ],
+      "prerequisites": [
+        "infra-network"
+      ],
+      "needs_deepening": true
+    },
+    {
+      "id": "ai-rag-vector",
+      "name": "Comprendre une recherche augmentée par des documents",
+      "domain": "ai",
+      "description": "Relier découpage de texte, recherche vectorielle, embeddings et RAG sans service externe obligatoire.",
+      "program_referenced": true,
+      "detailed_content_analyzed": false,
+      "sources": [
+        {
+          "source_id": "de-plan",
+          "pages": [
+            8,
+            9,
+            11
+          ]
+        }
+      ],
+      "prerequisites": [
+        "ai-nlp"
+      ],
+      "needs_deepening": true
+    }
+  ]
+}
